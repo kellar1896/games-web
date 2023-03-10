@@ -33,12 +33,38 @@
       {
         "id": 1,
         "name": "Chess",
-        "description": "A two-player strategy board game"
+        "description": "A two-player strategy board game",
+        "creation_date": "2018-01-01T00:00:00.000Z"
       },
       {
         "id": 2,
         "name": "Poker",
-        "description": "A card game"
+        "description": "A card game",
+        "creation_date": "2018-01-01T00:00:00.000Z"
+      },
+      {
+        "id": 3,
+        "name": "Chess",
+        "description": "A two-player strategy board game",
+        "creation_date": "2018-01-01T00:00:00.000Z"
+      },
+      {
+        "id": 4,
+        "name": "Poker",
+        "description": "A card game",
+        "creation_date": "2018-01-01T00:00:00.000Z"
+      },
+      {
+        "id": 5,
+        "name": "Chess",
+        "description": "A two-player strategy board game",
+        "creation_date": "2018-01-01T00:00:00.000Z"
+      },
+      {
+        "id": 6,
+        "name": "Poker",
+        "description": "A card game",
+        "creation_date": "2018-01-01T00:00:00.000Z"
       }
     ],
     "game_configurations": [
