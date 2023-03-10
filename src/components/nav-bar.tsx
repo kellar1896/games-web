@@ -6,14 +6,14 @@ import { routes } from "../router/routes.config";
 import "./nav-bar.css";
 import "../App.css";
 const NavBar = () => {
-  const [sidebar, setSidebar] = useState(true);
+  const [navbar, setNavbar] = useState(false);
 
-  const showSidebar = useCallback(() => setSidebar(!sidebar), [sidebar]);
+  const showSidebar = useCallback(() => setNavbar(!navbar), [navbar]);
   return (
     <header className="md:hidden">
       <div
         className={`${
-          sidebar ? "bg-raisingBlack" : "bg-redCrayola"
+          navbar ? "bg-raisingBlack" : "bg-redCrayola"
         } navbar transition-colors duration-700 flex justify-start items-center`}
       >
         <button className="menu-bars" onClick={showSidebar}>
@@ -25,7 +25,7 @@ const NavBar = () => {
       </div>
       <nav
         className={`${
-          sidebar ? "active " : ""
+          navbar ? "active " : ""
         } bg-redCrayola z-10 rounded-r-lg nav-menu p-5`}
       >
         <div className="flex flex-col" onClick={showSidebar}>
