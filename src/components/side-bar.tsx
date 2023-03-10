@@ -5,7 +5,7 @@ import { routes } from "../router/routes.config";
 
 const SideBar = () => {
   return (
-    <div className="min-h-screen w-3/12 hidden bg-redCrayola shadow-lg shadow-black md:flex md:flex-col items-center py-20">
+    <div className="min-h-screen w-3/12 hidden bg-redCrayola shadow-lg shadow-black md:flex md:flex-col items-center py-20 rounded-r-xl">
       <div className="flex flex-col items-center">
         <div className="rounded-full bg-lavanderBlush h-32 w-32"></div>
         <h3 className="mt-3 font-semibold text-lavanderBlush">Admin Name</h3>
