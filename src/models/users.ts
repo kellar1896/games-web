@@ -12,3 +12,5 @@ export type UserData = {
     gamesWon: number;
     points: number
 }
+
+export type UserHeader = 'name' | 'email' | 'age' | 'location'
