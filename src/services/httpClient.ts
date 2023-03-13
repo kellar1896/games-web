@@ -1,7 +1,5 @@
-
 export class HttpClient {
-  private baseUrl = process.env.API_URL;
-
+  baseUrl = process.env.REACT_APP_API_URL;
 
   async get(path: string) {
     const response = await fetch(`${this.baseUrl}${path}`);
