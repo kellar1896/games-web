@@ -2,9 +2,8 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import react, { memo, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { routes } from "../router/routes.config";
+import { routes } from "../../router/routes.config";
 import "./nav-bar.css";
-import "../App.css";
 const NavBar = () => {
   const [navbar, setNavbar] = useState(false);
 

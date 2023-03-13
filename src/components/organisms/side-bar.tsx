@@ -1,7 +1,7 @@
 import react, { memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import { routes } from "../router/routes.config";
+import { routes } from "../../router/routes.config";
 
 const SideBar = () => {
   return (
