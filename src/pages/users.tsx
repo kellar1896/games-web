@@ -154,7 +154,7 @@ const Users = () => {
         className="w-full md:w-44 self-end my-2"
         onClick={openModal}
       >
-        create New
+        New User
       </ButtonStyled>
       <UsersTable
         headers={headers}
@@ -162,7 +162,7 @@ const Users = () => {
         onEditUser={showSelectedUser}
       />
       {userSelected && (
-        <div className="my-5 bg-gray-500 rounded-lg p-5 w-full md:w-5/12 flex flex-col">
+        <div className="my-5 bg-gray-500 rounded-lg p-5 w-full md:w-5/12 flex flex-col overflow-hidden">
           {isConfirmCancelVisible ? (
             <ConfirmationButtonSelector
               className="self-end"
