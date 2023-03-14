@@ -1,28 +1,205 @@
-import react from "react";
+import react, { useCallback, useMemo, useState } from "react";
+import ButtonStyled from "../components/atoms/button-styled";
 import UsersTable from "../components/molecules/users-table";
+import ConfirmationButtonSelector from "../components/molecules/confirmation-buttons-selector";
+import UsersForm from "../components/organisms/users-form";
 import useFetchUsers from "../hooks/useFetchUsers";
-import { UserHeader } from "../models/users";
+import { User, UserHeader } from "../models/users";
+import { UserServices } from "../services/user.Services";
+import ModalStyled from "../components/templates/modal-styled";
+import LoadingPage from "../components/atoms/loading-page";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
-const headers = ["name", "email", "location"] as UserHeader[];
+const headers = ["name", "age", "email", "location"] as UserHeader[];
 
 const Users = () => {
-  const { usersData, isLoading, error } = useFetchUsers();
+  const { usersData, isLoading, error, getUserData } = useFetchUsers();
+  const [userSelected, setUserSelected] = useState(null as null | User);
+  const [formUser, setFormUser] = useState({
+    name: "",
+    age: 0,
+    email: "",
+    location: "",
+  } as User);
+  const [errorForm, setErrorForm] = useState(null as null | string);
+  const userServices = useMemo(() => new UserServices(), []);
+  const [isLoadingForm, setLoadingForm] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isConfirmCancelVisible, setIsConfirmCancelVisible] = useState(false);
+
+  const validateForm = (data: User) => {
+    if (!data.name) {
+      return "Name is required";
+    }
+    if (!data.email) {
+      return "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+      return "Invalid email address";
+    }
+    if (!data.location) {
+      return "Location is required";
+    }
+    if (!data.age) {
+      return "Age is required";
+    } else if (isNaN(data.age)) {
+      return "Age must be a number";
+    } else if (data.age < 18 || data.age > 100) {
+      return "Age must be between 18 and 100";
+    }
+    return null;
+  };
+
+  const onSubmitEdit = useCallback(
+    async (e: react.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const errorValidation = validateForm(formUser);
+      setErrorForm(errorValidation);
+      if (errorValidation === null) {
+        setLoadingForm(true);
+        try {
+          await userServices.updateUser(formUser.id, {
+            ...formUser,
+            age: +formUser.age,
+          });
+          setLoadingForm(false);
+          getUserData();
+          setUserSelected(null);
+        } catch (error) {
+          alert("could't update user try again");
+          setLoadingForm(false);
+        }
+      }
+    },
+    [formUser, getUserData, userServices]
+  );
+
+  const onSubmitCreate = useCallback(
+    async (e: react.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const errorValidation = validateForm(formUser);
+      setErrorForm(errorValidation);
+      if (errorValidation === null) {
+        setLoadingForm(true);
+        try {
+          await userServices.createUser({
+            ...formUser,
+            age: +formUser.age,
+          });
+          setLoadingForm(false);
+          getUserData();
+          setUserSelected(null);
+          setIsModalVisible(false);
+        } catch (error) {
+          alert("could't create user try again");
+          setLoadingForm(false);
+        }
+      }
+    },
+    [formUser, getUserData, userServices]
+  );
+
+  const deleteUser = useCallback(async () => {
+    if (userSelected) {
+      try {
+        await userServices.deleteUser(userSelected.id);
+        getUserData();
+        setUserSelected(null);
+        setFormUser({
+          name: "",
+          age: 0,
+          email: "",
+          location: "",
+        } as User);
+        setIsConfirmCancelVisible(false);
+      } catch (error) {}
+    }
+  }, [getUserData, userSelected, userServices]);
+
+  const showSelectedUser = useCallback((user: User) => {
+    setUserSelected(user);
+    setFormUser(user);
+  }, []);
+
+  const handleChange = (event: react.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormUser((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const openModal = useCallback(() => {
+    setIsModalVisible(true);
+    setFormUser({
+      name: "",
+      age: 0,
+      email: "",
+      location: "",
+    } as User);
+    setUserSelected(null);
+  }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   if (error) {
-    return (
-      <div>
-        {`Error: ${error}`}
-      </div>
-    );
+    return <div>{`Error: ${error}`}</div>;
   }
 
   return (
-    <div className="p-2 md:p-10">
-      <UsersTable headers={headers} data={usersData} onEditUser={() => {}} />
+    <div className="p-2 md:p-10 flex flex-col">
+      <ButtonStyled
+        className="w-full md:w-44 self-end my-2"
+        onClick={openModal}
+      >
+        create New
+      </ButtonStyled>
+      <UsersTable
+        headers={headers}
+        data={usersData}
+        onEditUser={showSelectedUser}
+      />
+      {userSelected && (
+        <div className="my-5 bg-gray-500 rounded-lg p-5 w-full md:w-5/12 flex flex-col">
+          {isConfirmCancelVisible ? (
+            <ConfirmationButtonSelector
+              className="self-end"
+              onCancel={() => setIsConfirmCancelVisible(false)}
+              onConfirm={deleteUser}
+            />
+          ) : (
+            <ButtonStyled
+              onClick={() => setIsConfirmCancelVisible(true)}
+              className="w-full md:w-32 self-end"
+            >
+              <FontAwesomeIcon icon={solid("trash")} />
+            </ButtonStyled>
+          )}
+          <UsersForm
+            buttonText="Edit"
+            onSubmit={onSubmitEdit}
+            user={formUser}
+            handleChange={handleChange}
+            error={errorForm}
+            loadingForm={isLoadingForm}
+          />
+        </div>
+      )}
+      <ModalStyled isOpen={isModalVisible}>
+        <div className="text-raisingBlack bg-transparent flex flex-col">
+          <UsersForm
+            buttonText="create"
+            onSubmit={onSubmitCreate}
+            user={formUser}
+            handleChange={handleChange}
+            error={errorForm}
+            loadingForm={isLoadingForm}
+            className="text-raisingBlack"
+          />
+        </div>
+      </ModalStyled>
     </div>
   );
 };
