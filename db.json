@@ -38,54 +38,34 @@
   ],
   "games": [
     {
-      "id": 1,
+      "id": "asj5y",
       "name": "Chess",
+      "category": "Board Game",
       "description": "A two-player strategy board game",
       "creation_date": "2018-01-01T00:00:00.000Z"
     },
     {
-      "id": 2,
+      "id": "akuy7",
       "name": "Poker",
+      "category": "Card Game",
       "description": "A card game",
       "creation_date": "2018-01-01T00:00:00.000Z"
     },
     {
-      "id": 3,
+      "id": "kmng5",
       "name": "Chess",
       "description": "A two-player strategy board game",
-      "creation_date": "2018-01-01T00:00:00.000Z"
-    },
-    {
-      "id": 4,
-      "name": "Poker",
-      "description": "A card game",
-      "creation_date": "2018-01-01T00:00:00.000Z"
-    },
-    {
-      "id": 5,
-      "name": "Chess",
-      "description": "A two-player strategy board game",
-      "creation_date": "2018-01-01T00:00:00.000Z"
-    },
-    {
-      "id": 6,
-      "name": "Poker",
-      "description": "A card game",
       "creation_date": "2018-01-01T00:00:00.000Z"
     }
   ],
-  "game_configurations": [
-    {
-      "id": 1,
-      "board_size": "8x8",
-      "starting_position": "Standard",
-      "time_limit": 30
-    },
-    {
-      "id": 2,
-      "deck_type": "Standard",
-      "betting_system": "No Limit",
-      "time_limit": 60
-    }
+  "game_categories": [
+    "Sandbox",
+    "Real-time strategy (RTS)",
+    "MOBA",
+    "Role-playing RPG",
+    "First-person shooter (FPS)",
+    "Third-person shooter (TPS)",
+    "Board Game",
+    "Card Game"
   ]
 }
