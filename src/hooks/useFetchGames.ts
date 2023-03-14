@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Game } from "../models/games";
 import { GameServices } from "../services/game.Services";
 
@@ -8,21 +8,22 @@ const useFetchGames = () => {
   const [error, setError] = useState(null as null | unknown);
   const gamesServices = useMemo(() => new GameServices(), []);
 
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const data = await gamesServices.fetchGames();
-        setGames(data);
-        setIsLoading(false);
-      } catch (error) {
-        setError(error);
-        setIsLoading(false);
-      }
-    };
-    fetchGames();
-  }, [gamesServices]);
+  const fetchGames = useCallback(async () => {
+    try {
+      const data = await gamesServices.fetchGames();
+      setGames(data);
+      setIsLoading(false);
+    } catch (error) {
+      setError(error);
+      setIsLoading(false);
+    }
+  },[gamesServices])
 
-  return { games, isLoading, error };
+  useEffect(() => {
+    fetchGames();
+  }, [fetchGames]);
+
+  return { games, isLoading, error, fetchGames };
 };
 
 export default useFetchGames;
