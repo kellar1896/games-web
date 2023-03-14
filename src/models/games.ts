@@ -7,4 +7,4 @@ export type Game = {
 }
 
 
-export type GameHeader = 'id' | 'name' | 'description' | 'creationDate'
+export type GameHeader = 'id' | 'name' | 'description' | 'creationDate' | 'category'
