@@ -1,6 +1,7 @@
-import React, { memo, useCallback, useMemo, useState } from "react";
+import react, { memo, useCallback, useMemo, useState } from "react";
 import { Game, GameHeader } from "../../models/games";
 import { camelCaseToReadable, convertIsoToDate } from "../../utils/tools";
+import DropdownStyled from "../atoms/dropdown-styled";
 
 type GamesTableProps = {
   headers: GameHeader[];
@@ -17,6 +18,7 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
 
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortHeader, setSortHeader] = useState("");
+  const [quantityFilter, setQuantityFilter] = useState(100);
 
   const toggleSortOrder = useCallback(() => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -30,9 +32,21 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
     [toggleSortOrder]
   );
 
+  const filteredData = useMemo(
+    () => data.slice(0, quantityFilter),
+    [data, quantityFilter]
+  );
+
+  const handleQuantityFilterChange = useCallback(
+    (event: react.ChangeEvent<HTMLSelectElement>) => {
+      setQuantityFilter(+event.target.value);
+    },
+    []
+  );
+
   const sortedData = useMemo(
     () =>
-      data.sort((a: any, b: any) => {
+      filteredData.sort((a: any, b: any) => {
         if (a[sortHeader] < b[sortHeader]) {
           return sortOrder === "asc" ? -1 : 1;
         }
@@ -41,11 +55,21 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
         }
         return 0;
       }),
-    [data, sortHeader, sortOrder]
+    [filteredData, sortHeader, sortOrder]
   );
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="flex flex-wrap md:flex-row">
+        <DropdownStyled
+          options={["1", "5", "10", "50", "100"]}
+          placeholder="Qty"
+          title="Filter"
+          name="qty"
+          onChange={handleQuantityFilterChange}
+          className="w-1/12 p-2"
+        />
+      </div>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -53,7 +77,7 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
               <th key={index} scope="col" className="px-6 py-3">
                 <div className="flex items-center">
                   {camelCaseToReadable(header)}
-                  <button onClick={()=> handleHeaderClick(header)}>
+                  <button onClick={() => handleHeaderClick(header)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-3 h-3 ml-1"

@@ -1,6 +1,7 @@
 import react, { memo, useCallback, useMemo, useState } from "react";
 import { User, UserHeader } from "../../models/users";
 import { camelCaseToReadable } from "../../utils/tools";
+import DropdownStyled from "../atoms/dropdown-styled";
 
 type UsersTableProps = {
   headers: UserHeader[];
@@ -11,29 +12,58 @@ type UsersTableProps = {
 const UsersTable = ({ data, headers, onEditUser }: UsersTableProps) => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortHeader, setSortHeader] = useState("");
-
+  const [quantityFilter, setQuantityFilter] = useState(100);
 
   const toggleSortOrder = useCallback(() => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  }, [sortOrder])
+  }, [sortOrder]);
 
-  const handleHeaderClick = useCallback((header: UserHeader) => {
-    setSortHeader(header);
-    toggleSortOrder();
-  },[toggleSortOrder])
+  const handleHeaderClick = useCallback(
+    (header: UserHeader) => {
+      setSortHeader(header);
+      toggleSortOrder();
+    },
+    [toggleSortOrder]
+  );
 
-  const sortedData = useMemo(()=> data.sort((a: any, b: any) => {
-    if (a[sortHeader] < b[sortHeader]) {
-      return sortOrder === "asc" ? -1 : 1;
-    }
-    if (a[sortHeader] > b[sortHeader]) {
-      return sortOrder === "asc" ? 1 : -1;
-    }
-    return 0;
-  }), [data, sortHeader, sortOrder])
+  const filteredData = useMemo(
+    () => data.slice(0, quantityFilter),
+    [data, quantityFilter]
+  );
+
+  const handleQuantityFilterChange = useCallback(
+    (event: react.ChangeEvent<HTMLSelectElement>) => {
+      setQuantityFilter(+event.target.value);
+    },
+    []
+  );
+
+  const sortedData = useMemo(
+    () =>
+      filteredData.sort((a: any, b: any) => {
+        if (a[sortHeader] < b[sortHeader]) {
+          return sortOrder === "asc" ? -1 : 1;
+        }
+        if (a[sortHeader] > b[sortHeader]) {
+          return sortOrder === "asc" ? 1 : -1;
+        }
+        return 0;
+      }),
+    [filteredData, sortHeader, sortOrder]
+  );
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="flex flex-wrap md:flex-row">
+        <DropdownStyled
+          options={["1", "5", "10", "50", "100"]}
+          placeholder="Qty"
+          title="Filter"
+          name="qty"
+          onChange={handleQuantityFilterChange}
+          className="w-1/12 p-2"
+        />
+      </div>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
