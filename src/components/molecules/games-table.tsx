@@ -86,14 +86,14 @@ const GamesTable = ({
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex flex-wrap md:flex-row py-2 space-x-5 items-end">
+      <div className="flex flex-wrap md:flex-row py-2 space-x-5 items-start">
         <DropdownStyled
           options={["1", "5", "10", "50", "100"]}
           placeholder="Qty"
           title="Filter"
           name="qty"
           onChange={handleQuantityFilterChange}
-          className="w-3/12 md:w-1/12"
+          className="w-3/12 md:w-1/12 md:mb-2"
           value={quantityFilter.toString()}
         />
         <DropdownStyled
@@ -102,7 +102,7 @@ const GamesTable = ({
           title="Category"
           name="category"
           onChange={handleCategoryFilterChange}
-          className="w-3/12 md:w-1/12"
+          className="w-3/12 md:w-1/12 md:mb-2"
           value={categoryFilter === "" ? undefined : categoryFilter}
         />
 
