@@ -8,7 +8,8 @@ type InputStyledProps = {
   onChange: (event: react.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
   icon?: IconProp;
-  id: string;
+  id?: string;
+  name?: string;
 };
 
 const InputStyled = ({
@@ -18,6 +19,7 @@ const InputStyled = ({
   placeholder,
   icon,
   id,
+  name,
 }: InputStyledProps) => {
   return (
     <div className="relative">
@@ -29,10 +31,11 @@ const InputStyled = ({
       <input
         id={id}
         type={type}
-        className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        name={name}
       />
     </div>
   );
