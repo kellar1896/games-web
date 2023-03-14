@@ -28,7 +28,7 @@ const Users = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isConfirmCancelVisible, setIsConfirmCancelVisible] = useState(false);
 
-  const validateForm = (data: User) => {
+  const validateForm = useCallback((data: User) => {
     if (!data.name) {
       return "Name is required";
     }
@@ -48,7 +48,7 @@ const Users = () => {
       return "Age must be between 18 and 100";
     }
     return null;
-  };
+  },[])
 
   const onSubmitEdit = useCallback(
     async (e: react.FormEvent<HTMLFormElement>) => {
@@ -71,7 +71,7 @@ const Users = () => {
         }
       }
     },
-    [formUser, getUserData, userServices]
+    [formUser, getUserData, userServices, validateForm]
   );
 
   const onSubmitCreate = useCallback(
@@ -96,7 +96,7 @@ const Users = () => {
         }
       }
     },
-    [formUser, getUserData, userServices]
+    [formUser, getUserData, userServices, validateForm]
   );
 
   const deleteUser = useCallback(async () => {
@@ -112,7 +112,9 @@ const Users = () => {
           location: "",
         } as User);
         setIsConfirmCancelVisible(false);
-      } catch (error) {}
+      } catch (error) {
+        alert("could't delete user try again");
+      }
     }
   }, [getUserData, userSelected, userServices]);
 
