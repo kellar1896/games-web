@@ -1,10 +1,12 @@
 # Games Dashboard for manage User and Games
 
-  
+## Prerequisites
+
+  - A Node version of at least 16 is required to create a React App.
+  - Npm is a package manager. It is automatically included in your Node installation. You should have at least npm version 8.
 
 ## How to run the project
 
-  
 
 - Install dependencies with `npm install`
 
