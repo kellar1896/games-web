@@ -189,6 +189,9 @@ const Users = () => {
       )}
       <ModalStyled isOpen={isModalVisible}>
         <div className="text-raisingBlack bg-transparent flex flex-col">
+          <button className="self-end" onClick={() => setIsModalVisible(false)}>
+            <FontAwesomeIcon icon={solid("xmark")} />
+          </button>
           <UsersForm
             buttonText="create"
             onSubmit={onSubmitCreate}
