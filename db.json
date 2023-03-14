@@ -42,21 +42,21 @@
       "name": "Chess",
       "category": "Board Game",
       "description": "A two-player strategy board game",
-      "creation_date": "2018-01-01T00:00:00.000Z"
+      "creationDate": "2018-01-01T00:00:00.000Z"
     },
     {
       "id": "akuy7",
       "name": "Poker",
       "category": "Card Game",
       "description": "A card game",
-      "creation_date": "2018-01-01T00:00:00.000Z"
+      "creationDate": "2018-01-01T00:00:00.000Z"
     },
     {
-      "id": "kmng5",
-      "name": "Chess",
-      "category": "Board Game",
-      "description": "A two-player strategy board game",
-      "creation_date": "2018-01-01T00:00:00.000Z"
+      "name": "Call of dutty",
+      "description": "COD",
+      "category": "First-person shooter (FPS)",
+      "id": "CaqTf",
+      "creationDate": "2023-03-14T13:58:09.927Z"
     }
   ],
   "game_categories": [
