@@ -1,16 +1,23 @@
 export type User = {
-    id: number;
+    id: string;
     name: string;
     email: string;
     age: number;
-    location: String;
+    location: string;
 }
 
 export type UserData = {
-    userId: number;
+    userId: string;
     gamesPlayed: number;
     gamesWon: number;
     points: number
+}
+
+export type ErrorUserForm = {
+    errorName: String
+    errorEmail: String
+    errorAge: String
+    errorLocation: String
 }
 
 export type UserHeader = 'name' | 'email' | 'age' | 'location'
