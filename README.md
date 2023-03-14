@@ -15,6 +15,6 @@
 - you can edit the package.json scripts if you wanna change the ports of the server of the web portal
 
 ###  Stack of technologies used
-- create react app **(React JS)** with **TypeScript** for the web portal with 
+- create react app **(React JS)** with **TypeScript** for the web portal
 -  **json-server** as mocked API for provide REST API functions
 - **Tailwind CSS** as a stylesheet provider, for his fast develop way 
