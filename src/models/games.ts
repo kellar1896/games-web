@@ -1,13 +1,10 @@
 export type Game = {
-    id: number;
+    id: string;
     name: string;
+    category: string;
     description: string;
     creationDate: string;
 }
 
-export type GameConfiguration = {
-    gameId: number;
-    [key: string]: any;
-}
 
 export type GameHeader = 'id' | 'name' | 'description' | 'creationDate'
