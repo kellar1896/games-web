@@ -12,6 +12,7 @@ type FormGameCardProp = {
     event:
       | react.ChangeEvent<HTMLInputElement>
       | react.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLSelectElement>
   ) => void;
   gameOptions: string[];
 };
@@ -35,7 +36,7 @@ const FormGameCard = ({
               value={game.name}
               onChange={handleForm}
               placeholder="Name"
-              id="name"
+              name="name"
             />
           </div>
           <div className="text-lavanderBlush text-sm my-2 w-full">
@@ -44,7 +45,7 @@ const FormGameCard = ({
               value={game.description}
               onChange={handleForm}
               placeholder="Description"
-              id="description"
+              name="description"
             />
           </div>
           <div>
@@ -52,11 +53,13 @@ const FormGameCard = ({
               options={gameOptions}
               title="Category"
               placeholder="select an option"
+              onChange={handleForm}
+              name="category"
             />
           </div>
         </div>
       </div>
-      <ButtonStyled type="submit" className="w-full md:w-20 self-end">
+      <ButtonStyled type="submit" className="w-full md:w-20 self-end mt-5">
         Save
       </ButtonStyled>
     </form>
