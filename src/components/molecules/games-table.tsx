@@ -60,14 +60,14 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex flex-wrap md:flex-row">
+      <div className="flex flex-wrap md:flex-row py-2">
         <DropdownStyled
           options={["1", "5", "10", "50", "100"]}
           placeholder="Qty"
           title="Filter"
           name="qty"
           onChange={handleQuantityFilterChange}
-          className="w-1/12 p-2"
+          className="w-3/12 md:w-1/12"
         />
       </div>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
