@@ -21,7 +21,7 @@ export class UserServices {
       return response as User;
     } catch (error) {
       console.log(`Error ${error}`);
-      throw new Error("Unable to fetch user data");
+      throw new Error("Unable to update user data");
     }
   };
 
@@ -34,7 +34,7 @@ export class UserServices {
       return response as User;
     } catch (error) {
       console.log(`Error ${error}`);
-      throw new Error("Unable to fetch user data");
+      throw new Error("Unable to create user data");
     }
   };
 
@@ -44,7 +44,7 @@ export class UserServices {
       return response as User;
     } catch (error) {
       console.log(`Error ${error}`);
-      throw new Error("Unable to fetch user data");
+      throw new Error("Unable to delete user data");
     }
   }
 }
