@@ -69,16 +69,16 @@ const Games = () => {
   },[])
 
   const onSubmit = useCallback(
-    async (event: react.FormEvent<HTMLFormElement>, type: "update" | "create") => {
+    async (event: react.FormEvent<HTMLFormElement>, type: "UPDATE" | "CREATE") => {
       event.preventDefault();
       const errorValidation = validateForm(formGame)
       setErrorForm(errorValidation)
       if(errorValidation === null){
         setLoadingForm(true);
         try {
-          if(type === "create") {
+          if(type === "CREATE") {
             await gameServices.createGame(formGame)
-          }else if(type === 'update'){
+          }else if(type === 'UPDATE'){
             await gameServices.updateGame(formGame.id, formGame)
           }
           fetchGames();
@@ -150,7 +150,7 @@ const Games = () => {
           )}
           <FormGameCard
             game={formGame}
-            onSubmit={(e)=>onSubmit(e,'update')}
+            onSubmit={(e)=>onSubmit(e,'UPDATE')}
             handleForm={handleForm}
             gameOptions={options}
             isLoading={isLoadingForm}
@@ -165,7 +165,7 @@ const Games = () => {
           </button>
           <FormGameCard
             game={formGame}
-            onSubmit={(e)=>onSubmit(e,'create')}
+            onSubmit={(e)=>onSubmit(e,'CREATE')}
             handleForm={handleForm}
             gameOptions={options}
             isLoading={isLoadingForm}

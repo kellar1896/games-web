@@ -50,48 +50,31 @@ const Users = () => {
     return null;
   },[])
 
-  const onSubmitEdit = useCallback(
-    async (e: react.FormEvent<HTMLFormElement>) => {
+  const onSubmit = useCallback(
+    async (e: react.FormEvent<HTMLFormElement>, submitType: "CREATE" | "UPDATE") => {
       e.preventDefault();
       const errorValidation = validateForm(formUser);
       setErrorForm(errorValidation);
       if (errorValidation === null) {
         setLoadingForm(true);
         try {
-          await userServices.updateUser(formUser.id, {
-            ...formUser,
-            age: +formUser.age,
-          });
-          setLoadingForm(false);
-          getUserData();
-          setUserSelected(null);
-        } catch (error) {
-          alert("could't update user try again");
-          setLoadingForm(false);
-        }
-      }
-    },
-    [formUser, getUserData, userServices, validateForm]
-  );
-
-  const onSubmitCreate = useCallback(
-    async (e: react.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const errorValidation = validateForm(formUser);
-      setErrorForm(errorValidation);
-      if (errorValidation === null) {
-        setLoadingForm(true);
-        try {
-          await userServices.createUser({
-            ...formUser,
-            age: +formUser.age,
-          });
+          if(submitType === "UPDATE") {
+            await userServices.updateUser(formUser.id, {
+              ...formUser,
+              age: +formUser.age,
+            });
+          } else if(submitType === "CREATE") {
+            await userServices.createUser({
+              ...formUser,
+              age: +formUser.age,
+            });
+          }
           setLoadingForm(false);
           getUserData();
           setUserSelected(null);
           setIsModalVisible(false);
         } catch (error) {
-          alert("could't create user try again");
+          alert("could't update user try again");
           setLoadingForm(false);
         }
       }
@@ -181,7 +164,7 @@ const Users = () => {
           )}
           <UsersForm
             buttonText="Edit"
-            onSubmit={onSubmitEdit}
+            onSubmit={(e) => onSubmit(e, "UPDATE")}
             user={formUser}
             handleChange={handleChange}
             error={errorForm}
@@ -196,7 +179,7 @@ const Users = () => {
           </button>
           <UsersForm
             buttonText="create"
-            onSubmit={onSubmitCreate}
+            onSubmit={(e) => onSubmit(e, "CREATE")}
             user={formUser}
             handleChange={handleChange}
             error={errorForm}
