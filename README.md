@@ -12,7 +12,7 @@
 
 - in another terminal run the web with the command `npm run start`
 
-- you can edit the package.json scripts if you wanna change the ports of the server of the web portal
+- you can edit the package.json scripts if you wanna change the ports of the server or the web portal
 
 ###  Stack of technologies used
 - create react app **(React JS)** with **TypeScript** for the web portal
