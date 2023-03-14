@@ -1,5 +1,4 @@
 import React, { memo } from "react";
-import "./dropdown-styled.css";
 
 type DropdownStyledProps = {
   options: string[];
