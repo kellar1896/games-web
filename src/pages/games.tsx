@@ -131,6 +131,7 @@ const Games = () => {
         headers={headers}
         data={games}
         onEditGame={showSelectedGame}
+        options={options}
       />
       {selectedGame && (
         <div className="my-5 bg-gray-500 w-full rounded-lg p-5 md:w-5/12 flex flex-col">

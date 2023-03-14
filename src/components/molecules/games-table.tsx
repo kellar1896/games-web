@@ -1,15 +1,22 @@
 import react, { memo, useCallback, useMemo, useState } from "react";
 import { Game, GameHeader } from "../../models/games";
 import { camelCaseToReadable, convertIsoToDate } from "../../utils/tools";
+import ButtonStyled from "../atoms/button-styled";
 import DropdownStyled from "../atoms/dropdown-styled";
 
 type GamesTableProps = {
   headers: GameHeader[];
   data: Game[];
   onEditGame: (game: Game) => void;
+  options: string[];
 };
 
-const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
+const GamesTable = ({
+  headers,
+  data,
+  onEditGame,
+  options,
+}: GamesTableProps) => {
   const renderTableValue = useCallback((value: any, header: GameHeader) => {
     if (header === "creationDate") {
       return convertIsoToDate(value);
@@ -19,6 +26,7 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortHeader, setSortHeader] = useState("");
   const [quantityFilter, setQuantityFilter] = useState(100);
+  const [categoryFilter, setCategoryFilter] = useState("");
 
   const toggleSortOrder = useCallback(() => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -32,10 +40,16 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
     [toggleSortOrder]
   );
 
-  const filteredData = useMemo(
-    () => data.slice(0, quantityFilter),
-    [data, quantityFilter]
-  );
+  const getFilterData = useMemo(() => {
+    if (categoryFilter !== "") {
+      return data
+        .filter((game: any) => game.category === categoryFilter)
+        .slice(0, quantityFilter);
+    }
+    return data.slice(0, quantityFilter);
+  }, [categoryFilter, data, quantityFilter]);
+
+  const filteredData = useMemo(() => getFilterData, [getFilterData]);
 
   const handleQuantityFilterChange = useCallback(
     (event: react.ChangeEvent<HTMLSelectElement>) => {
@@ -43,6 +57,18 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
     },
     []
   );
+
+  const handleCategoryFilterChange = useCallback(
+    (event: react.ChangeEvent<HTMLSelectElement>) => {
+      setCategoryFilter(event.target.value);
+    },
+    []
+  );
+
+  const resetFilters = useCallback(()=>{
+    setQuantityFilter(100)
+    setCategoryFilter("")
+  },[])
 
   const sortedData = useMemo(
     () =>
@@ -60,7 +86,7 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex flex-wrap md:flex-row py-2">
+      <div className="flex flex-wrap md:flex-row py-2 space-x-5 items-end">
         <DropdownStyled
           options={["1", "5", "10", "50", "100"]}
           placeholder="Qty"
@@ -68,7 +94,24 @@ const GamesTable = ({ headers, data, onEditGame }: GamesTableProps) => {
           name="qty"
           onChange={handleQuantityFilterChange}
           className="w-3/12 md:w-1/12"
+          value={quantityFilter.toString()}
         />
+        <DropdownStyled
+          options={options}
+          placeholder="Category"
+          title="Category"
+          name="category"
+          onChange={handleCategoryFilterChange}
+          className="w-3/12 md:w-1/12"
+          value={categoryFilter === "" ? undefined : categoryFilter}
+        />
+
+        <ButtonStyled
+          className="w-full md:w-44 self-end my-2"
+          onClick={resetFilters}
+        >
+          Reset Filters
+        </ButtonStyled>
       </div>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
