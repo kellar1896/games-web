@@ -10,7 +10,7 @@ import ModalStyled from "../components/templates/modal-styled";
 // import LoadingPage from "../components/atoms/loading-page";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useSelector } from "react-redux";
 import { loadUsers, selectAllUsers } from "../features/users/usersSlice";
 import { RootState } from "../app/store";
@@ -20,8 +20,8 @@ const headers = ["name", "age", "email", "location"] as UserHeader[];
 
 const Users = () => {
   const dispatch = useAppDispatch()
-  const usersData = useSelector(selectAllUsers)
-  const { status } = useSelector((state: RootState) => state.users);
+  const usersData = useAppSelector(selectAllUsers)
+  const { status } = useAppSelector((state: RootState) => state.users);
   // const { usersData, isLoading, error, getUserData } = useFetchUsers();
   const [userSelected, setUserSelected] = useState(null as null | User);
   const [formUser, setFormUser] = useState({
@@ -37,8 +37,7 @@ const Users = () => {
   const [isConfirmCancelVisible, setIsConfirmCancelVisible] = useState(false);
 
   useEffect(()=>{
-    console.log('USE EFFECT')
-    dispatch(loadUsers)
+    dispatch(loadUsers())
   },[dispatch])
 
   const validateForm = useCallback((data: User) => {
@@ -146,6 +145,7 @@ const Users = () => {
     return <div>{`Error:`}</div>;
   }
 
+  console.log('renderizados')
 
   return (
     <div className="p-2 md:p-10 flex flex-col">
