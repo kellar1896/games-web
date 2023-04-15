@@ -16,9 +16,7 @@ const initialState: UsersState = {
 const userServices = new UserServices();
 
 export const loadUsers = createAsyncThunk("users/getAllUsers", async () => {
-console.log('TRATA DE HACER ALGO')
   const users = await userServices.fetchUsers();
-  console.log(users, 'DATA_USERS')
   return users;
 });
 
