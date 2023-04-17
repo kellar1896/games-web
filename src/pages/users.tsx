@@ -3,25 +3,29 @@ import ButtonStyled from "../components/atoms/button-styled";
 import UsersTable from "../components/molecules/users-table";
 import ConfirmationButtonSelector from "../components/molecules/confirmation-buttons-selector";
 import UsersForm from "../components/organisms/users-form";
-// import useFetchUsers from "../hooks/useFetchUsers";
 import { User, UserHeader } from "../models/users";
-import { UserServices } from "../services/user.Services";
 import ModalStyled from "../components/templates/modal-styled";
-// import LoadingPage from "../components/atoms/loading-page";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { loadUsers, selectAllUsers } from "../features/users/usersSlice";
+import {
+  createUser,
+  editUser,
+  removeUser,
+  removeUserSelected,
+  selectAllUsers,
+  setUserSelected,
+} from "../features/users/usersSlice";
 import { RootState } from "../app/store";
 import LoadingPage from "../components/atoms/loading-page";
 
 const headers = ["name", "age", "email", "location"] as UserHeader[];
 
 const Users = () => {
-  const dispatch = useAppDispatch()
-  const usersData = useAppSelector(selectAllUsers)
+  const dispatch = useAppDispatch();
+  const usersData = useAppSelector(selectAllUsers);
   const { status } = useAppSelector((state: RootState) => state.users);
-  const [userSelected, setUserSelected] = useState(null as null | User);
+  const { selectedUser } = useAppSelector((state: RootState) => state.users);
   const [formUser, setFormUser] = useState({
     name: "",
     age: 0,
@@ -32,8 +36,6 @@ const Users = () => {
   const [isLoadingForm, setLoadingForm] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isConfirmCancelVisible, setIsConfirmCancelVisible] = useState(false);
-
-  
 
   const validateForm = useCallback((data: User) => {
     if (!data.name) {
@@ -55,63 +57,49 @@ const Users = () => {
       return "Age must be between 18 and 100";
     }
     return null;
-  },[])
+  }, []);
 
-  // const onSubmit = useCallback(
-  //   async (e: react.FormEvent<HTMLFormElement>, submitType: "CREATE" | "UPDATE") => {
-  //     e.preventDefault();
-  //     const errorValidation = validateForm(formUser);
-  //     setErrorForm(errorValidation);
-  //     if (errorValidation === null) {
-  //       setLoadingForm(true);
-  //       try {
-  //         if(submitType === "UPDATE") {
-  //           await userServices.updateUser(formUser.id, {
-  //             ...formUser,
-  //             age: +formUser.age,
-  //           });
-  //         } else if(submitType === "CREATE") {
-  //           await userServices.createUser({
-  //             ...formUser,
-  //             age: +formUser.age,
-  //           });
-  //         }
-  //         setLoadingForm(false);
-  //         getUserData();
-  //         setUserSelected(null);
-  //         setIsModalVisible(false);
-  //       } catch (error) {
-  //         alert("could't update user try again");
-  //         setLoadingForm(false);
-  //       }
-  //     }
-  //   },
-  //   [formUser, getUserData, userServices, validateForm]
-  // );
+  const onSubmit = useCallback(
+    async (
+      e: react.FormEvent<HTMLFormElement>,
+      submitType: "CREATE" | "UPDATE"
+    ) => {
+      e.preventDefault();
+      const errorValidation = validateForm(formUser);
+      setErrorForm(errorValidation);
+      if (errorValidation !== null) return;
+      if (submitType === "UPDATE") {
+        dispatch(
+          editUser({
+            ...formUser,
+            age: +formUser.age,
+          })
+        );
+      } else if (submitType === "CREATE") {
+        dispatch(
+          createUser({
+            ...formUser,
+            age: +formUser.age,
+          })
+        );
+      }
+      setLoadingForm(false);
+      dispatch(removeUserSelected);
+      setIsModalVisible(false);
+    },
+    [dispatch, formUser, validateForm]
+  );
 
-  // const deleteUser = useCallback(async () => {
-  //   if (userSelected) {
-  //     try {
-  //       await userServices.deleteUser(userSelected.id);
-  //       getUserData();
-  //       setUserSelected(null);
-  //       setFormUser({
-  //         name: "",
-  //         age: 0,
-  //         email: "",
-  //         location: "",
-  //       } as User);
-  //       setIsConfirmCancelVisible(false);
-  //     } catch (error) {
-  //       alert("could't delete user try again");
-  //     }
-  //   }
-  // }, [getUserData, userSelected, userServices]);
+  const deleteUser = useCallback(async () => {
+    if (selectedUser?.id === undefined) return;
+    dispatch(removeUser(selectedUser.id));
+  }, [dispatch, selectedUser]);
+
 
   const showSelectedUser = useCallback((user: User) => {
-    setUserSelected(user);
+    dispatch(setUserSelected(user))
     setFormUser(user);
-  }, []);
+  }, [dispatch]);
 
   const handleChange = (event: react.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -129,9 +117,11 @@ const Users = () => {
       email: "",
       location: "",
     } as User);
-    setUserSelected(null);
-  }, []);
-  
+    dispatch(removeUserSelected);
+  }, [dispatch]);
+
+  console.log('cualquier cosa')
+
   if (status === "loading") {
     return <LoadingPage />;
   }
@@ -139,8 +129,6 @@ const Users = () => {
   if (status === "failed") {
     return <div>{`Error:`}</div>;
   }
-
-  console.log('renderizados')
 
   return (
     <div className="p-2 md:p-10 flex flex-col">
@@ -155,14 +143,13 @@ const Users = () => {
         data={usersData}
         onEditUser={showSelectedUser}
       />
-      {userSelected && (
+      {selectedUser && (
         <div className="my-5 bg-gray-500 rounded-lg p-5 w-full md:w-5/12 flex flex-col overflow-hidden">
           {isConfirmCancelVisible ? (
             <ConfirmationButtonSelector
               className="self-end"
               onCancel={() => setIsConfirmCancelVisible(false)}
-              // onConfirm={deleteUser}
-              onConfirm={()=>{}}
+              onConfirm={deleteUser}
             />
           ) : (
             <ButtonStyled
@@ -174,8 +161,7 @@ const Users = () => {
           )}
           <UsersForm
             buttonText="Edit"
-            // onSubmit={(e) => onSubmit(e, "UPDATE")}
-            onSubmit={(e) => {}}
+            onSubmit={(e) => onSubmit(e, "UPDATE")}
             user={formUser}
             handleChange={handleChange}
             error={errorForm}
@@ -190,8 +176,7 @@ const Users = () => {
           </button>
           <UsersForm
             buttonText="create"
-            // onSubmit={(e) => onSubmit(e, "CREATE")}
-            onSubmit={(e) => {}}
+            onSubmit={(e) => onSubmit(e, "CREATE")}
             user={formUser}
             handleChange={handleChange}
             error={errorForm}
