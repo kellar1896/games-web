@@ -7,7 +7,7 @@ export const routes = [
     {
         id:'users',
         name: 'Users',
-        path: '/users',
+        path: '/',
         element: Users,
         icon: solid('user'),
         // children:[
@@ -20,7 +20,7 @@ export const routes = [
     {
         id:'games',
         name: 'Games',
-        path: '/',
+        path: '/games',
         element: Games,
         icon: solid('gamepad'),
         // children:[
